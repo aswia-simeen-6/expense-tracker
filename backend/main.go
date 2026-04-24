@@ -37,11 +37,7 @@ func main() {
 	api.Put("/expenses/:id", h.UpdateExpense)
 	api.Delete("/expenses/:id", h.DeleteExpense)
 
-	app.Static("/", "./frontend/dist")
-	app.Get("/*", func(c *fiber.Ctx) error {
-		return c.SendFile("./frontend/dist/index.html")
-	})
-
+	
 	port := env("PORT", "8080")
 	log.Printf("listening on :%s", port)
 	log.Fatal(app.Listen(":" + port))
