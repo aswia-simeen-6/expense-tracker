@@ -1,6 +1,6 @@
 import type { CreateExpensePayload, Expense, ListResponse, UpdateExpensePayload } from "../types";
 
-const BASE = import.meta.env.VITE_API_URL ?? "/api";
+const BASE = import.meta.env.VITE_API_URL ?? "";
 
 export class ApiResponseError extends Error {
   constructor(public readonly status: number, public readonly messages: string[]) {
@@ -26,7 +26,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 
 export const api = {
   createExpense(payload: CreateExpensePayload): Promise<Expense> {
-    return fetch(`${BASE}/expenses`, {
+    return fetch(`${BASE}/api/expenses`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -38,11 +38,11 @@ export const api = {
     if (params.category) qs.set("category", params.category);
     if (params.sort) qs.set("sort", params.sort);
     const suffix = qs.size ? `?${qs}` : "";
-    return fetch(`${BASE}/expenses${suffix}`).then((r) => handleResponse<ListResponse>(r));
+    return fetch(`${BASE}/api/expenses${suffix}`).then((r) => handleResponse<ListResponse>(r));
   },
 
   updateExpense(id: string, payload: UpdateExpensePayload): Promise<Expense> {
-    return fetch(`${BASE}/expenses/${id}`, {
+    return fetch(`${BASE}/api/expenses/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -50,7 +50,7 @@ export const api = {
   },
 
   deleteExpense(id: string): Promise<void> {
-    return fetch(`${BASE}/expenses/${id}`, { method: "DELETE" }).then((r) =>
+    return fetch(`${BASE}/api/expenses/${id}`, { method: "DELETE" }).then((r) =>
       handleResponse<void>(r)
     );
   },
